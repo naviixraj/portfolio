@@ -649,8 +649,20 @@ export default function App() {
         isOpen={isWheelOpen} 
         onClose={() => setIsWheelOpen(false)}
         onSelectWeapon={(w) => {
-          setActiveScene('skills');
-          setSkillCategory(w.type.includes('FRONTEND') ? 'FRONTEND' : w.type.includes('BACKEND') ? 'BACKEND' : w.type.includes('DATA') ? 'DATABASE' : 'ALL');
+          setIsWheelOpen(false);
+          switchScene('skills');
+          const cat = ((w?.cat || w?.name || '') + '').toUpperCase();
+          if (cat.includes('FRAMEWORK') || cat.includes('MOTION') || cat.includes('SCROLL') || cat.includes('SCRUBBING') || cat.includes('DESIGN') || cat.includes('ASTRO') || cat.includes('GSAP') || cat.includes('LENIS') || cat.includes('CANVAS') || cat.includes('FIGMA')) {
+            setSkillCategory('FRONTEND');
+          } else if (cat.includes('BACKEND') || cat.includes('NODE')) {
+            setSkillCategory('BACKEND');
+          } else if (cat.includes('DATABASE') || cat.includes('SQL') || cat.includes('POSTGRES') || cat.includes('MONGO')) {
+            setSkillCategory('DATABASE');
+          } else if (cat.includes('AI') || cat.includes('ML') || cat.includes('PYTHON') || cat.includes('CINEMATICS') || cat.includes('3D') || cat.includes('BLENDER') || cat.includes('VEO')) {
+            setSkillCategory('AI / DS');
+          } else {
+            setSkillCategory('ALL');
+          }
         }}
       />
     </SceneViewport>

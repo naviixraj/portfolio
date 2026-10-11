@@ -132,9 +132,12 @@ export function WeaponWheel({ isOpen, onClose, onSelectWeapon }) {
                 key={slot.id}
                 onMouseEnter={() => setHoveredId(slot.id)}
                 onMouseLeave={() => setHoveredId(null)}
-                onClick={() => {
-                  onSelectWeapon && onSelectWeapon(slot);
+                onClick={(e) => {
+                  e.stopPropagation();
                   onClose();
+                  if (onSelectWeapon) {
+                    onSelectWeapon(slot);
+                  }
                 }}
                 className={`absolute w-24 md:w-28 py-1.5 px-2 rounded-xs cursor-pointer transition-all duration-150 text-center shadow-lg backdrop-blur-md ${
                   isHovered
