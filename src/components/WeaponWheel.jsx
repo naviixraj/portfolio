@@ -1,19 +1,88 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Code, Database, Cpu, Layout, Server, Sparkles } from 'lucide-react';
+import { X } from 'lucide-react';
 
 export function WeaponWheel({ isOpen, onClose, onSelectWeapon }) {
   if (!isOpen) return null;
 
-  const weapons = [
-    { id: 1, name: 'REACT.JS', type: 'FRONTEND UI', icon: Layout, desc: 'Next.js, Tailwind, Component Architecture', stat: '95%' },
-    { id: 2, name: 'NODE.JS', type: 'BACKEND CORE', icon: Server, desc: 'Express, REST APIs, Microservices', stat: '90%' },
-    { id: 3, name: 'PYTHON', type: 'AI & LOGIC', icon: Code, desc: 'FastAPI, Scripting, Automation', stat: '88%' },
-    { id: 4, name: 'MACHINE LEARNING', type: 'INTELLIGENCE', icon: Cpu, desc: 'Scikit-Learn, Pandas, Feature Engineering', stat: '82%' },
-    { id: 5, name: 'POSTGRES / MONGO', type: 'DATA VAULT', icon: Database, desc: 'SQL Complex Queries, Mongoose, Aggregations', stat: '85%' },
-    { id: 6, name: 'TAILWIND CSS', type: 'AESTHETICS', icon: Sparkles, desc: 'Framer Motion, 3D Canvas, Responsive Systems', stat: '94%' },
-    { id: 7, name: 'DOCKER & GIT', type: 'DEVOPS / VIRTUAL', icon: Server, desc: 'Version Control, CI/CD, Containers', stat: '84%' },
-    { id: 8, name: 'PANDAS / NUMPY', type: 'DATA SCIENCE', icon: Database, desc: 'EDA, Data Cleaning, Numerical Processing', stat: '86%' },
+  const [hoveredId, setHoveredId] = useState(null);
+
+  // Exact 8 tools matching the Claude Code / Sanjai Builds loadout photo:
+  // ASTRO, GSAP, LENIS, CANVAS, VEO, BLENDER, PYTHON, FIGMA
+  // with coordinates spread far enough so they NEVER bunch together or overlap the center!
+  const slots = [
+    { 
+      id: 1, 
+      name: 'ASTRO', 
+      cat: 'Framework', 
+      desc: 'High-performance islands architecture & web performance',
+      left: '50%',
+      top: '12%',
+      transform: 'translate(-50%, -50%)',
+    },
+    { 
+      id: 2, 
+      name: 'GSAP', 
+      cat: 'Motion', 
+      desc: 'Advanced timeline animations, ScrollTrigger & physics',
+      left: '68%',
+      top: '26%',
+      transform: 'translate(-50%, -50%)',
+    },
+    { 
+      id: 3, 
+      name: 'LENIS', 
+      cat: 'Scroll', 
+      desc: 'Smooth inertial momentum scrolling engine',
+      left: '74%',
+      top: '50%',
+      transform: 'translate(-50%, -50%)',
+    },
+    { 
+      id: 4, 
+      name: 'CANVAS', 
+      cat: 'Scrubbing', 
+      desc: 'HTML5 60FPS canvas image sequence scrubbing & particles',
+      left: '66%',
+      top: '74%',
+      transform: 'translate(-50%, -50%)',
+    },
+    { 
+      id: 5, 
+      name: 'VEO', 
+      cat: 'Cinematics', 
+      desc: 'AI cinematic motion generation & looping environment video',
+      left: '50%',
+      top: '88%',
+      transform: 'translate(-50%, -50%)',
+    },
+    { 
+      id: 6, 
+      name: 'BLENDER', 
+      cat: '3D', 
+      desc: '3D spatial modeling, asset baking & lighting',
+      left: '34%',
+      top: '74%',
+      transform: 'translate(-50%, -50%)',
+    },
+    { 
+      id: 7, 
+      name: 'PYTHON', 
+      cat: 'AI / ML', 
+      desc: 'Machine learning pipelines, FastAPI & data analysis',
+      left: '26%',
+      top: '50%',
+      transform: 'translate(-50%, -50%)',
+    },
+    { 
+      id: 8, 
+      name: 'FIGMA', 
+      cat: 'Design', 
+      desc: 'UI/UX interface prototyping, design systems & layouts',
+      left: '32%',
+      top: '26%',
+      transform: 'translate(-50%, -50%)',
+    },
   ];
 
   return (
@@ -22,74 +91,81 @@ export function WeaponWheel({ isOpen, onClose, onSelectWeapon }) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md select-none"
+        className="fixed inset-0 z-50 flex items-center justify-center bg-black/65 backdrop-blur-xs select-none"
         onClick={onClose}
       >
-        <div className="relative w-full max-w-4xl p-6 flex flex-col items-center" onClick={(e) => e.stopPropagation()}>
-          {/* Header */}
-          <div className="flex justify-between items-center w-full mb-8 border-b border-pink-500/30 pb-3">
-            <div>
-              <div className="text-xs font-mono text-pink-500 tracking-widest uppercase">TACTICAL LOADOUT</div>
-              <h2 className="text-3xl font-black text-white tracking-wider">SELECT WEAPON OF CHOICE</h2>
-            </div>
-            <button 
-              onClick={onClose}
-              className="p-2 text-gray-400 hover:text-white bg-white/5 hover:bg-white/10 rounded-full transition-colors"
+        {/* Close Button top-right */}
+        <button 
+          onClick={onClose}
+          className="absolute top-5 right-7 text-gray-400 hover:text-white bg-black/50 border border-white/20 p-1.5 rounded-full transition-colors z-50 cursor-pointer"
+        >
+          <X size={18} />
+        </button>
+
+        {/* The Exact Radial Loadout Wheel Stage */}
+        <div 
+          className="relative w-[520px] h-[400px] md:w-[620px] md:h-[460px] flex items-center justify-center"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {/* Subtle concentric rings */}
+          <div className="absolute w-52 h-52 md:w-60 md:h-60 rounded-full border border-white/10 pointer-events-none" />
+          <div className="absolute w-80 h-80 md:w-96 md:h-96 rounded-full border border-dashed border-cyan-500/15 pointer-events-none" />
+
+          {/* Center Hub: "Loadout TECH STACK" */}
+          <div className="text-center z-10 pointer-events-none select-none">
+            <h3 
+              className="text-4xl md:text-5xl font-black text-white italic tracking-wide uppercase drop-shadow-[0_2px_12px_rgba(0,0,0,0.95)]"
+              style={{ fontFamily: "'Impact', sans-serif" }}
             >
-              <X size={24} />
-            </button>
+              Loadout
+            </h3>
+            <div className="text-[10px] font-mono text-[#ff9900] tracking-widest uppercase font-bold mt-0.5">
+              TECH STACK
+            </div>
           </div>
 
-          {/* 8-Slot Radial / Grid Arsenal */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full">
-            {weapons.map((w) => {
-              const Icon = w.icon;
-              return (
-                <motion.div
-                  key={w.id}
-                  whileHover={{ scale: 1.05, borderColor: '#ec4899', y: -4 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={() => {
-                    onSelectWeapon && onSelectWeapon(w);
-                    onClose();
-                  }}
-                  className="bg-black/60 border-2 border-white/10 p-5 rounded-xl cursor-pointer hover:bg-pink-950/20 transition-all flex flex-col justify-between group shadow-lg"
+          {/* 8 Radial Slots positioned distinctly with no overlap */}
+          {slots.map((slot) => {
+            const isHovered = hoveredId === slot.id;
+            return (
+              <div
+                key={slot.id}
+                onMouseEnter={() => setHoveredId(slot.id)}
+                onMouseLeave={() => setHoveredId(null)}
+                onClick={() => {
+                  onSelectWeapon && onSelectWeapon(slot);
+                  onClose();
+                }}
+                className={`absolute w-24 md:w-28 py-1.5 px-2 rounded-xs cursor-pointer transition-all duration-150 text-center shadow-lg backdrop-blur-md ${
+                  isHovered
+                    ? 'bg-[#ff1493] text-white scale-110 z-30 shadow-[0_0_16px_rgba(255,20,147,0.8)] border border-white'
+                    : 'bg-black/85 text-gray-200 border border-white/20 hover:border-pink-500 z-20'
+                }`}
+                style={{
+                  left: slot.left,
+                  top: slot.top,
+                  transform: slot.transform,
+                }}
+              >
+                <div 
+                  className="font-black text-xs md:text-sm tracking-wider uppercase leading-none"
+                  style={{ fontFamily: "'Impact', sans-serif" }}
                 >
-                  <div className="flex justify-between items-start mb-4">
-                    <span className="text-[10px] font-mono text-gray-400 group-hover:text-pink-400 uppercase tracking-wider">
-                      SLOT {w.id}
-                    </span>
-                    <span className="text-xs font-bold font-mono text-emerald-400 bg-emerald-950/50 px-2 py-0.5 rounded border border-emerald-500/30">
-                      {w.stat}
-                    </span>
-                  </div>
+                  {slot.name}
+                </div>
+                <div className={`text-[8px] font-mono tracking-tight mt-0.5 uppercase ${
+                  isHovered ? 'text-white/90' : 'text-gray-400'
+                }`}>
+                  {slot.cat}
+                </div>
+              </div>
+            );
+          })}
+        </div>
 
-                  <div className="p-3 bg-white/5 rounded-lg w-fit text-cyan-400 group-hover:text-pink-400 group-hover:bg-pink-500/10 mb-3 transition-colors">
-                    <Icon size={28} />
-                  </div>
-
-                  <div>
-                    <div className="text-[11px] font-mono text-pink-400 font-bold uppercase tracking-wider mb-1">
-                      {w.type}
-                    </div>
-                    <div className="text-lg font-black text-white tracking-wide group-hover:text-pink-100 mb-1">
-                      {w.name}
-                    </div>
-                    <p className="text-xs text-gray-400 leading-relaxed">
-                      {w.desc}
-                    </p>
-                  </div>
-                </motion.div>
-              );
-            })}
-          </div>
-
-          {/* Instructions */}
-          <div className="mt-8 text-center text-xs font-mono text-gray-400 flex items-center gap-3">
-            <span className="bg-white/10 px-2 py-1 rounded text-white">[ESC] OR CLICK OUTSIDE TO RETURN</span>
-            <span>•</span>
-            <span className="text-cyan-400">CLICK ANY WEAPON TO EQUIP</span>
-          </div>
+        {/* Bottom helper text matching template */}
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 text-center pointer-events-none select-none font-mono text-[10px] text-gray-400 tracking-wider">
+          CLICK ANY WEAPON SLOT TO EQUIP • [ESC] RETURN TO GAME
         </div>
       </motion.div>
     </AnimatePresence>
