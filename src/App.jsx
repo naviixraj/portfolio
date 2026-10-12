@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { SceneViewport } from './components/SceneViewport';
 import { GameHUD, MinimapRadar } from './components/GameHUD';
 import { WeaponWheel } from './components/WeaponWheel';
 import { 
-  Plus, ChevronRight, Check, ArrowRight,
+  Plus, ChevronRight, Check, ArrowRight, ArrowLeft,
   Mail, MapPin
 } from 'lucide-react';
 
@@ -16,6 +16,69 @@ export default function App() {
   const [isWheelOpen, setIsWheelOpen] = useState(false);
   const [visited, setVisited] = useState({ menu: true });
   const [skillCategory, setSkillCategory] = useState('ALL');
+  const [isPlaying, setIsPlaying] = useState(false);
+  const audioRef = useRef(null);
+
+  // Start background music automatically on page open
+  const playAudio = () => {
+    if (audioRef.current) {
+      audioRef.current.volume = 0.85;
+      const playPromise = audioRef.current.play();
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            setIsPlaying(true);
+            setIsMuted(false);
+          })
+          .catch((err) => {
+            console.log('Autoplay pending user gesture:', err);
+          });
+      }
+    }
+  };
+
+  useEffect(() => {
+    // 1. Immediate attempt right when page mounts
+    playAudio();
+
+    // 2. Listeners for any user interaction to immediately unblock audio
+    const interactionEvents = ['pointerdown', 'mousedown', 'keydown', 'touchstart', 'scroll', 'click'];
+    const handleGesture = () => {
+      if (audioRef.current && audioRef.current.paused) {
+        audioRef.current.volume = 0.85;
+        audioRef.current.play()
+          .then(() => {
+            setIsPlaying(true);
+            setIsMuted(false);
+            interactionEvents.forEach(e => window.removeEventListener(e, handleGesture));
+          })
+          .catch(() => {});
+      }
+    };
+
+    interactionEvents.forEach(e => window.addEventListener(e, handleGesture, { passive: true }));
+
+    return () => {
+      interactionEvents.forEach(e => window.removeEventListener(e, handleGesture));
+    };
+  }, []);
+
+  const toggleMute = () => {
+    if (!audioRef.current) return;
+    if (audioRef.current.paused) {
+      audioRef.current.volume = 0.85;
+      audioRef.current.play()
+        .then(() => {
+          setIsPlaying(true);
+          setIsMuted(false);
+        })
+        .catch(() => {});
+    } else {
+      audioRef.current.pause();
+      setIsPlaying(false);
+      setIsMuted(true);
+    }
+  };
 
   // Exact countdown ticker simulation like the screenshot: "LEONIDA DROPS IN"
   const [countdown, setCountdown] = useState('108 . 15 . 33 . 27');
@@ -137,7 +200,8 @@ export default function App() {
         cash={cash} 
         stars={stars} 
         isMuted={isMuted} 
-        onToggleMute={() => setIsMuted(!isMuted)} 
+        isPlaying={isPlaying}
+        onToggleMute={toggleMute} 
       />
 
       {/* Signature Quote (Bottom Right) */}
@@ -175,6 +239,21 @@ export default function App() {
             Portfolio
           </div>
         </div>
+
+        {/* Back Arrow Button to go back to Home Menu */}
+        {activeScene !== 'menu' && (
+          <motion.button
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            onClick={() => switchScene('menu')}
+            className="flex items-center gap-2 mb-3 px-3 py-1.5 bg-black/80 hover:bg-[#ff1493] text-cyan-400 hover:text-white rounded border border-cyan-400/40 hover:border-white text-xs font-mono font-bold tracking-wider uppercase transition-all shadow-[0_2px_10px_rgba(0,0,0,0.6)] group cursor-pointer"
+          >
+            <ArrowLeft size={14} className="group-hover:-translate-x-1 transition-transform" />
+            <span>BACK TO HOME</span>
+          </motion.button>
+        )}
 
         {/* ========================================================= */}
         {/* COMPACT MENU LIST (Sits completely clear of Minimap) */}
@@ -273,12 +352,6 @@ export default function App() {
               >
                 VIEW JOURNEY <ChevronRight size={12} />
               </button>
-              <button 
-                onClick={() => switchScene('menu')}
-                className="px-2.5 py-1.5 bg-black/60 text-gray-300 hover:text-white rounded text-[11px] font-mono border border-white/20 transition-colors cursor-pointer"
-              >
-                [ESC] MENU
-              </button>
             </div>
           </motion.div>
         )}
@@ -344,13 +417,6 @@ export default function App() {
                 </div>
               ))}
             </div>
-
-            <button 
-              onClick={() => switchScene('menu')}
-              className="mt-2 text-[10px] font-mono text-gray-400 hover:text-white"
-            >
-              [ESC] BACK TO MENU
-            </button>
           </motion.div>
         )}
 
@@ -385,13 +451,6 @@ export default function App() {
                 <p className="text-[10px] text-gray-400 mt-0.5">High-fidelity interfaces using React, Tailwind & Canvas.</p>
               </div>
             </div>
-
-            <button 
-              onClick={() => switchScene('menu')}
-              className="mt-2 text-[10px] font-mono text-gray-400 hover:text-white"
-            >
-              [ESC] BACK TO MENU
-            </button>
           </motion.div>
         )}
 
@@ -430,13 +489,6 @@ export default function App() {
                 </div>
               ))}
             </div>
-
-            <button 
-              onClick={() => switchScene('menu')}
-              className="text-[10px] font-mono text-gray-400 hover:text-white"
-            >
-              [ESC] BACK TO MENU
-            </button>
           </motion.div>
         )}
 
@@ -476,13 +528,6 @@ export default function App() {
                 <div className="text-[8px] font-mono text-gray-400 uppercase">SPECIALIZATION</div>
               </div>
             </div>
-
-            <button 
-              onClick={() => switchScene('menu')}
-              className="text-[10px] font-mono text-gray-400 hover:text-white"
-            >
-              [ESC] BACK TO MENU
-            </button>
           </motion.div>
         )}
 
@@ -552,12 +597,6 @@ export default function App() {
               >
                 SEND EMAIL <ChevronRight size={12} />
               </a>
-              <button 
-                onClick={() => switchScene('menu')}
-                className="text-[10px] font-mono text-gray-400 hover:text-white"
-              >
-                [ESC] MENU
-              </button>
             </div>
           </motion.div>
         )}
@@ -593,13 +632,6 @@ export default function App() {
                 </div>
               ))}
             </div>
-
-            <button 
-              onClick={() => switchScene('menu')}
-              className="mt-2 text-[10px] font-mono text-gray-400 hover:text-white"
-            >
-              [ESC] BACK TO MENU
-            </button>
           </motion.div>
         )}
 
@@ -621,13 +653,6 @@ export default function App() {
             <div className="text-xl text-[#ff2a85] font-serif italic mb-3" style={{ fontFamily: "'Brush Script MT', cursive" }}>
               See you soon!
             </div>
-
-            <button 
-              onClick={() => switchScene('menu')}
-              className="px-4 py-1.5 bg-black/60 border border-white/20 hover:bg-black/80 text-white font-bold rounded text-[10px] uppercase tracking-wider cursor-pointer"
-            >
-              &lt; BACK TO HOME
-            </button>
           </motion.div>
         )}
 
@@ -665,6 +690,52 @@ export default function App() {
           }
         }}
       />
+      {/* Interactive GTA Soundtrack Start Banner - disappears automatically the instant sound plays */}
+      <AnimatePresence>
+        {!isPlaying && (
+          <motion.div
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 10, scale: 0.95 }}
+            transition={{ duration: 0.3 }}
+            onClick={() => {
+              if (audioRef.current) {
+                audioRef.current.volume = 0.85;
+                audioRef.current.play().then(() => {
+                  setIsPlaying(true);
+                  setIsMuted(false);
+                }).catch(() => {});
+              }
+            }}
+            className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 cursor-pointer pointer-events-auto bg-black/85 hover:bg-black/95 border-2 border-[#ff2a85] hover:border-cyan-400 px-5 py-2.5 rounded shadow-[0_0_25px_rgba(255,42,133,0.7)] backdrop-blur-md flex items-center gap-3 transition-all group select-none"
+          >
+            <div className="w-2.5 h-2.5 rounded-full bg-[#ff2a85] group-hover:bg-cyan-400 animate-ping" />
+            <span className="font-mono text-[11px] md:text-xs font-black tracking-widest text-white uppercase group-hover:text-cyan-300">
+              ▶ CLICK TO START GTA SOUNDTRACK • FLASH FM
+            </span>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Background GTA Soundtrack Audio */}
+      <audio
+        ref={audioRef}
+        src="/gta_theme.mp3"
+        autoPlay
+        loop
+        playsInline
+        preload="auto"
+        onPlay={() => {
+          setIsPlaying(true);
+          setIsMuted(false);
+        }}
+        onPause={() => {
+          setIsPlaying(false);
+        }}
+      >
+        <source src="/gta_theme.mp3" type="audio/mpeg" />
+        <source src="/gta_theme.mpeg" type="audio/mpeg" />
+      </audio>
     </SceneViewport>
   );
 }

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Volume2, VolumeX } from 'lucide-react';
 import { GtaRealMap } from './GtaRealMap';
 
-export function GameHUD({ cash = 1250000, stars = 3, isMuted, onToggleMute }) {
+export function GameHUD({ cash = 1250000, stars = 3, isMuted, isPlaying = false, onToggleMute }) {
   const [time, setTime] = useState('18:56');
   const [displayCash, setDisplayCash] = useState(cash);
 
@@ -61,10 +61,30 @@ export function GameHUD({ cash = 1250000, stars = 3, isMuted, onToggleMute }) {
       <div className="flex items-center gap-2.5 mt-1">
         <button 
           onClick={onToggleMute}
-          className="text-[9px] font-mono text-gray-400 hover:text-white flex items-center gap-1 bg-black/40 px-1.5 py-0.5 rounded border border-white/10"
+          className={`text-[9px] font-mono flex items-center gap-1.5 px-2 py-0.5 rounded border transition-colors ${
+            isPlaying && !isMuted 
+              ? 'bg-black/70 text-emerald-300 border-emerald-500/40 shadow-[0_0_10px_rgba(16,185,129,0.3)]' 
+              : 'bg-black/50 text-gray-300 border-white/20 hover:text-white'
+          }`}
+          title={isPlaying && !isMuted ? 'Mute Soundtrack' : 'Play Soundtrack'}
         >
-          {isMuted ? <VolumeX size={11} className="text-red-400" /> : <Volume2 size={11} className="text-green-400" />}
-          <span>{isMuted ? 'MUTE' : 'AUDIO'}</span>
+          {isPlaying && !isMuted ? (
+            <>
+              <Volume2 size={11} className="text-emerald-400 animate-pulse" />
+              <span>RADIO 98.3</span>
+              {/* Animated mini equalizer */}
+              <span className="flex items-end gap-0.5 h-2.5">
+                <span className="w-0.5 h-full bg-emerald-400 animate-[bounce_0.8s_infinite]" />
+                <span className="w-0.5 h-2/3 bg-emerald-400 animate-[bounce_0.6s_infinite_0.2s]" />
+                <span className="w-0.5 h-full bg-emerald-400 animate-[bounce_0.9s_infinite_0.4s]" />
+              </span>
+            </>
+          ) : (
+            <>
+              <VolumeX size={11} className="text-pink-400" />
+              <span>{isMuted ? 'UNMUTE' : 'START BGM'}</span>
+            </>
+          )}
         </button>
 
         <div className="flex items-center gap-0.5">
