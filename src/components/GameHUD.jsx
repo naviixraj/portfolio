@@ -37,7 +37,7 @@ export function GameHUD({ cash = 1250000, stars = 3, isMuted, isPlaying = false,
   }, [cash]);
 
   return (
-    <div className="absolute top-5 right-7 flex flex-col items-end pointer-events-auto z-40 select-none">
+    <div className="absolute top-2.5 right-4 md:top-5 md:right-7 flex flex-col items-end pointer-events-auto z-40 select-none scale-85 sm:scale-95 md:scale-100 origin-top-right">
       {/* Top Status: Time + Weapon Box */}
       <div className="flex items-center gap-2.5">
         <div className="text-right">

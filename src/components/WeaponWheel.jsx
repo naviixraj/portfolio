@@ -104,7 +104,7 @@ export function WeaponWheel({ isOpen, onClose, onSelectWeapon }) {
 
         {/* The Exact Radial Loadout Wheel Stage */}
         <div 
-          className="relative w-[520px] h-[400px] md:w-[620px] md:h-[460px] flex items-center justify-center"
+          className="relative w-[360px] h-[300px] sm:w-[480px] sm:h-[380px] md:w-[620px] md:h-[460px] scale-80 sm:scale-95 md:scale-100 flex items-center justify-center"
           onClick={(e) => e.stopPropagation()}
         >
           {/* Subtle concentric rings */}

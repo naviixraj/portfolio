@@ -183,7 +183,7 @@ export default function App() {
   return (
     <SceneViewport activeScene={activeScene}>
       {/* Top Center: Exact GTA VI "LEONIDA DROPS IN" Countdown Banner */}
-      <div className="absolute top-4 left-1/2 -translate-x-1/2 flex flex-col items-center pointer-events-none select-none z-40">
+      <div className="absolute top-2.5 md:top-4 left-1/2 -translate-x-1/2 flex flex-col items-center pointer-events-none select-none z-40 scale-85 sm:scale-95 md:scale-100">
         <div className="bg-black/70 border border-white/20 rounded-full px-2 py-0.2 text-[9px] font-mono text-gray-300 font-bold mb-0.5 shadow-md">
           104.9
         </div>
@@ -213,8 +213,8 @@ export default function App() {
       </div>
 
       {/* Territory Location Watermark banner (Over the car) */}
-      <div className="absolute bottom-16 left-1/2 -translate-x-1/2 text-center pointer-events-none select-none z-20">
-        <div className="text-white/80 font-black tracking-widest text-base md:text-lg uppercase drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)]" style={{ fontFamily: "'Impact', sans-serif" }}>
+      <div className="absolute bottom-6 md:bottom-16 left-1/2 -translate-x-1/2 text-center pointer-events-none select-none z-20">
+        <div className="text-white/80 font-black tracking-widest text-sm md:text-lg uppercase drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)]" style={{ fontFamily: "'Impact', sans-serif" }}>
           {locations[activeScene]}
         </div>
       </div>
@@ -222,18 +222,18 @@ export default function App() {
       {/* ========================================================= */}
       {/* LEFT COLUMN: EXACT SIZED TITLE + COMPACT MENU */}
       {/* ========================================================= */}
-      <div className="absolute top-5 left-7 md:top-7 md:left-10 z-30 pointer-events-auto max-w-[280px] md:max-w-xs select-none">
+      <div className="absolute top-3 left-4 md:top-7 md:left-10 z-30 pointer-events-auto max-w-[240px] sm:max-w-[270px] md:max-w-xs select-none">
         {/* Exact Brand Title matching template proportions */}
-        <div className="mb-3">
+        <div className="mb-2 md:mb-3">
           <h1 
-            className="text-4xl md:text-5xl font-black tracking-tight text-white uppercase leading-[0.9] drop-shadow-[0_4px_12px_rgba(0,0,0,0.95)]"
+            className="text-3xl md:text-5xl font-black tracking-tight text-white uppercase leading-[0.9] drop-shadow-[0_4px_12px_rgba(0,0,0,0.95)]"
             style={{ fontFamily: "'Impact', sans-serif" }}
           >
             NAVI RAJ <br />
             BUILDS
           </h1>
           <div 
-            className="text-xl md:text-2xl text-[#ff2a85] font-serif italic -mt-1 drop-shadow-[0_0_10px_rgba(255,42,133,0.7)]"
+            className="text-lg md:text-2xl text-[#ff2a85] font-serif italic -mt-0.5 md:-mt-1 drop-shadow-[0_0_10px_rgba(255,42,133,0.7)]"
             style={{ fontFamily: "'Brush Script MT', cursive" }}
           >
             Portfolio
@@ -248,9 +248,9 @@ export default function App() {
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             onClick={() => switchScene('menu')}
-            className="flex items-center gap-2 mb-3 px-3 py-1.5 bg-black/80 hover:bg-[#ff1493] text-cyan-400 hover:text-white rounded border border-cyan-400/40 hover:border-white text-xs font-mono font-bold tracking-wider uppercase transition-all shadow-[0_2px_10px_rgba(0,0,0,0.6)] group cursor-pointer"
+            className="flex items-center gap-2 mb-2 md:mb-3 px-2.5 md:px-3 py-1 md:py-1.5 bg-black/80 hover:bg-[#ff1493] text-cyan-400 hover:text-white rounded border border-cyan-400/40 hover:border-white text-[11px] md:text-xs font-mono font-bold tracking-wider uppercase transition-all shadow-[0_2px_10px_rgba(0,0,0,0.6)] group cursor-pointer"
           >
-            <ArrowLeft size={14} className="group-hover:-translate-x-1 transition-transform" />
+            <ArrowLeft size={13} className="group-hover:-translate-x-1 transition-transform" />
             <span>BACK TO HOME</span>
           </motion.button>
         )}
@@ -262,7 +262,7 @@ export default function App() {
           <motion.div 
             initial={{ opacity: 0, x: -15 }}
             animate={{ opacity: 1, x: 0 }}
-            className="space-y-0.5 font-bold text-sm md:text-base uppercase tracking-wider mb-4"
+            className="space-y-0.5 font-bold text-xs md:text-base uppercase tracking-wider mb-2 md:mb-4 max-h-[46vh] overflow-y-auto custom-scroll pr-1"
           >
             {menuItems.map((item) => {
               const isSelected = item.key === 'menu';
@@ -661,7 +661,7 @@ export default function App() {
       {/* ========================================================= */}
       {/* BOTTOM-LEFT: COMPACT MINIMAP RADAR (Never touches the menu!) */}
       {/* ========================================================= */}
-      <div className="absolute bottom-5 left-7 md:bottom-7 md:left-10 z-30 pointer-events-none">
+      <div className="absolute bottom-2.5 left-4 md:bottom-7 md:left-10 z-30 pointer-events-none scale-80 sm:scale-90 md:scale-100 origin-bottom-left">
         <MinimapRadar 
           activeScene={activeScene}
           objective={objectives[activeScene]} 

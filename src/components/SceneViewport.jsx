@@ -3,7 +3,27 @@ import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { BirdsLayer, AircraftBeacon } from './BirdsLayer';
 import { AtmosphereCanvas } from './AtmosphereCanvas';
 
+import { RotateCcw } from 'lucide-react';
+
 export function SceneViewport({ activeScene = 'menu', children }) {
+  // Mobile orientation detection
+  const [isPortrait, setIsPortrait] = useState(false);
+  const [sideDisplay, setSideDisplay] = useState(true);
+
+  useEffect(() => {
+    const handleOrientation = () => {
+      const portrait = window.innerHeight > window.innerWidth && window.innerWidth < 1024;
+      setIsPortrait(portrait);
+    };
+    handleOrientation();
+    window.addEventListener('resize', handleOrientation);
+    window.addEventListener('orientationchange', handleOrientation);
+    return () => {
+      window.removeEventListener('resize', handleOrientation);
+      window.removeEventListener('orientationchange', handleOrientation);
+    };
+  }, []);
+
   // Mouse position values for 3D parallax
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
@@ -22,6 +42,22 @@ export function SceneViewport({ activeScene = 'menu', children }) {
     const { innerWidth, innerHeight } = window;
     mouseX.set(e.clientX / innerWidth - 0.5);
     mouseY.set(e.clientY / innerHeight - 0.5);
+  };
+
+  const isSideways = isPortrait && sideDisplay;
+
+  const handleTouchMove = (e) => {
+    if (e.touches && e.touches[0]) {
+      const touch = e.touches[0];
+      const { innerWidth, innerHeight } = window;
+      if (isSideways) {
+        mouseX.set((touch.clientY / innerHeight) - 0.5);
+        mouseY.set(((innerWidth - touch.clientX) / innerWidth) - 0.5);
+      } else {
+        mouseX.set((touch.clientX / innerWidth) - 0.5);
+        mouseY.set((touch.clientY / innerHeight) - 0.5);
+      }
+    }
   };
 
   // Map active screen to scene image and atmospheric FX
@@ -81,10 +117,41 @@ export function SceneViewport({ activeScene = 'menu', children }) {
 
   return (
     <div 
-      className="relative w-screen h-screen overflow-hidden bg-black select-none"
-      onMouseMove={handleMouseMove}
-      style={{ perspective: 1200 }}
+      className={isSideways ? "fixed inset-0 w-screen h-screen overflow-hidden bg-black select-none z-0" : "relative w-screen h-screen overflow-hidden bg-black select-none"}
     >
+      {/* Mobile Orientation Toggle */}
+      {isPortrait && (
+        <button 
+          onClick={() => setSideDisplay(prev => !prev)}
+          className="fixed top-2.5 left-2.5 z-50 pointer-events-auto bg-black/85 hover:bg-[#ff1493] text-cyan-300 hover:text-white border border-cyan-400/50 text-[9px] font-mono font-bold px-2 py-1 rounded shadow-lg flex items-center gap-1.5 backdrop-blur-md cursor-pointer transition-colors"
+          title="Toggle Horizontal Side Display"
+        >
+          <RotateCcw size={10} />
+          <span>{sideDisplay ? 'SIDEWAYS [ON]' : 'ENABLE SIDEWAYS'}</span>
+        </button>
+      )}
+
+      <div 
+        className="relative overflow-hidden bg-black select-none transition-all duration-300"
+        onMouseMove={handleMouseMove}
+        onTouchMove={handleTouchMove}
+        style={{ 
+          perspective: 1200,
+          ...(isSideways ? {
+            position: 'fixed',
+            top: 0,
+            left: '100vw',
+            width: '100dvh',
+            height: '100dvw',
+            transformOrigin: 'top left',
+            transform: 'rotate(90deg)',
+            overflow: 'hidden'
+          } : {
+            width: '100vw',
+            height: '100vh',
+          })
+        }}
+      >
       <style>{`
         /* Slow continuous cinematic breathing camera loop */
         @keyframes breathingCamera {
@@ -167,5 +234,6 @@ export function SceneViewport({ activeScene = 'menu', children }) {
         {children}
       </div>
     </div>
+  </div>
   );
 }
