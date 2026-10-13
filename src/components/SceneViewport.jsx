@@ -16,7 +16,7 @@ import exitScene from '../assets/scenes/exit.jpg';
 export function SceneViewport({ activeScene = 'menu', children }) {
   // Mobile orientation detection
   const [isPortrait, setIsPortrait] = useState(false);
-  const [sideDisplay, setSideDisplay] = useState(true);
+  const [sideDisplay, setSideDisplay] = useState(false);
 
   useEffect(() => {
     const handleOrientation = () => {
@@ -131,11 +131,11 @@ export function SceneViewport({ activeScene = 'menu', children }) {
       {isPortrait && (
         <button 
           onClick={() => setSideDisplay(prev => !prev)}
-          className="fixed top-2.5 left-2.5 z-50 pointer-events-auto bg-black/85 hover:bg-[#ff1493] text-cyan-300 hover:text-white border border-cyan-400/50 text-[9px] font-mono font-bold px-2 py-1 rounded shadow-lg flex items-center gap-1.5 backdrop-blur-md cursor-pointer transition-colors"
+          className="fixed bottom-2.5 right-2.5 z-50 pointer-events-auto bg-black/85 hover:bg-[#ff1493] text-cyan-300 hover:text-white border border-cyan-400/50 text-[9px] font-mono font-bold px-2 py-1 rounded shadow-lg flex items-center gap-1.5 backdrop-blur-md cursor-pointer transition-colors"
           title="Toggle Horizontal Side Display"
         >
           <RotateCcw size={10} />
-          <span>{sideDisplay ? 'SIDEWAYS [ON]' : 'ENABLE SIDEWAYS'}</span>
+          <span>{sideDisplay ? 'PORTRAIT' : 'CONSOLE 90°'}</span>
         </button>
       )}
 

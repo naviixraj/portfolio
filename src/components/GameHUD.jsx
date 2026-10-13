@@ -2,7 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { Volume2, VolumeX } from 'lucide-react';
 import { GtaRealMap } from './GtaRealMap';
 
-export function GameHUD({ cash = 1250000, stars = 3, isMuted, isPlaying = false, onToggleMute }) {
+export function GameHUD({ 
+  cash = 1250000, 
+  stars = 3, 
+  isMuted, 
+  isPlaying = false, 
+  onToggleMute,
+  activeScene = 'menu',
+  objective = 'BUILD NEXT LEVEL DIGITAL EXPERIENCES',
+  location = 'VICE BEACH'
+}) {
   const [time, setTime] = useState('18:56');
   const [displayCash, setDisplayCash] = useState(cash);
 
@@ -37,13 +46,13 @@ export function GameHUD({ cash = 1250000, stars = 3, isMuted, isPlaying = false,
   }, [cash]);
 
   return (
-    <div className="absolute top-2.5 right-4 md:top-5 md:right-7 flex flex-col items-end pointer-events-auto z-40 select-none scale-85 sm:scale-95 md:scale-100 origin-top-right">
+    <div className="absolute top-2.5 right-3 md:top-5 md:right-7 flex flex-col items-end pointer-events-auto z-40 select-none scale-85 sm:scale-95 md:scale-100 origin-top-right">
       {/* Top Status: Time + Weapon Box */}
       <div className="flex items-center gap-2.5">
         <div className="text-right">
           <div className="text-white font-mono font-bold text-xs tracking-widest">{time}</div>
           <div 
-            className="text-2xl md:text-3xl font-black tracking-tight text-[#22c55e] drop-shadow-[0_2px_8px_rgba(34,197,94,0.6)] leading-none"
+            className="text-xl sm:text-2xl md:text-3xl font-black tracking-tight text-[#22c55e] drop-shadow-[0_2px_8px_rgba(34,197,94,0.6)] leading-none"
             style={{ fontFamily: "'Impact', sans-serif" }}
           >
             ${displayCash.toLocaleString()}
@@ -51,14 +60,14 @@ export function GameHUD({ cash = 1250000, stars = 3, isMuted, isPlaying = false,
         </div>
 
         {/* GTA Weapon Box [S] -100 */}
-        <div className="flex flex-col items-center justify-center bg-black/70 border border-white/30 rounded-xs w-9 h-10 shadow-md">
-          <span className="text-white font-black text-base leading-none" style={{ fontFamily: "'Impact', sans-serif" }}>S</span>
-          <span className="text-emerald-400 font-mono text-[9px] font-bold mt-0.5">-100</span>
+        <div className="flex flex-col items-center justify-center bg-black/70 border border-white/30 rounded-xs w-8 h-9 md:w-9 md:h-10 shadow-md">
+          <span className="text-white font-black text-sm md:text-base leading-none" style={{ fontFamily: "'Impact', sans-serif" }}>S</span>
+          <span className="text-emerald-400 font-mono text-[8px] md:text-[9px] font-bold mt-0.5">-100</span>
         </div>
       </div>
 
       {/* Wanted Stars & Audio Button */}
-      <div className="flex items-center gap-2.5 mt-1">
+      <div className="flex items-center gap-2 mt-1">
         <button 
           onClick={onToggleMute}
           className={`text-[9px] font-mono flex items-center gap-1.5 px-2 py-0.5 rounded border transition-colors ${
@@ -91,7 +100,7 @@ export function GameHUD({ cash = 1250000, stars = 3, isMuted, isPlaying = false,
           {[1, 2, 3, 4, 5].map((star) => (
             <span
               key={star}
-              className={`text-base transition-all duration-300 ${
+              className={`text-sm md:text-base transition-all duration-300 ${
                 star <= stars
                   ? 'text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.9)]'
                   : 'text-gray-700/50'
@@ -102,32 +111,63 @@ export function GameHUD({ cash = 1250000, stars = 3, isMuted, isPlaying = false,
           ))}
         </div>
       </div>
+
+      {/* MOBILE ONLY: Minimap Radar placed under the dollar and below the five stars */}
+      <div className="mt-2 flex flex-col items-end md:hidden">
+        <MinimapRadar 
+          activeScene={activeScene}
+          objective={objective}
+          location={location}
+          isMobileRight={true}
+        />
+      </div>
     </div>
   );
 }
 
-// Compact Authentic GTA Minimap Radar
-export function MinimapRadar({ activeScene = 'menu', objective = 'BUILD NEXT LEVEL DIGITAL EXPERIENCES', location = 'VICE BEACH' }) {
+// Authentic GTA Minimap Radar with adaptable mobile stacking
+export function MinimapRadar({ 
+  activeScene = 'menu', 
+  objective = 'BUILD NEXT LEVEL DIGITAL EXPERIENCES', 
+  location = 'VICE BEACH',
+  isMobileRight = false 
+}) {
   return (
-    <div className="flex items-end gap-3.5 select-none pointer-events-none">
-      {/* Exact Rectangular Radar matching template */}
-      <div className="relative w-28 h-20 md:w-32 md:h-22 bg-[#0a1420] border-2 border-cyan-500/50 rounded-sm overflow-hidden shadow-[0_0_20px_rgba(0,0,0,0.95)] backdrop-blur-md">
+    <div 
+      className={`select-none pointer-events-none flex ${
+        isMobileRight 
+          ? 'flex-col items-end gap-1.5' 
+          : 'flex-col items-start gap-2 md:flex-row md:items-end md:gap-3.5'
+      }`}
+    >
+      {/* Rectangular Radar Map */}
+      <div 
+        className={`bg-[#0a1420] border-2 border-cyan-500/50 rounded-sm overflow-hidden shadow-[0_0_20px_rgba(0,0,0,0.95)] backdrop-blur-md relative ${
+          isMobileRight 
+            ? 'w-24 h-16 sm:w-28 sm:h-18' 
+            : 'w-28 h-20 md:w-32 md:h-22'
+        }`}
+      >
         <GtaRealMap locationKey={activeScene} />
       </div>
 
-      {/* Objective Text Ticker */}
-      <div className="flex flex-col mb-0.5 max-w-[200px] md:max-w-xs">
-        <div className="text-[9px] font-mono tracking-widest text-[#ff2a85] font-black uppercase flex items-center gap-1">
+      {/* Objective Text Ticker - put DOWN the map on mobile */}
+      <div 
+        className={`flex flex-col ${
+          isMobileRight 
+            ? 'items-end text-right max-w-[140px] sm:max-w-[160px]' 
+            : 'items-start text-left max-w-[200px] md:max-w-xs mb-0.5'
+        }`}
+      >
+        <div className="text-[8px] sm:text-[9px] font-mono tracking-widest text-[#ff2a85] font-black uppercase flex items-center gap-1">
           <span className="inline-block w-1.5 h-1.5 bg-[#ff2a85] animate-pulse"></span>
           CURRENT OBJECTIVE
         </div>
-        <div className="text-white font-black text-xs md:text-sm tracking-wider uppercase drop-shadow-md leading-tight mt-0.5">
+        <div className="text-white font-black text-[10px] sm:text-xs md:text-sm tracking-wider uppercase drop-shadow-md leading-tight mt-0.5">
           {objective}
         </div>
-        <div className="text-[9px] font-mono text-gray-400 mt-0.5 flex items-center gap-1.5">
+        <div className="text-[8px] sm:text-[9px] font-mono text-gray-400 mt-0.5 flex items-center gap-1.5">
           <span className="text-[#ff2a85] font-bold">{location}</span>
-          <span>•</span>
-          <span>Vice City Inspired</span>
           <span>•</span>
           <span className="text-gray-300">Stay Legendary</span>
         </div>
