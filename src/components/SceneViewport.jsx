@@ -5,6 +5,14 @@ import { AtmosphereCanvas } from './AtmosphereCanvas';
 
 import { RotateCcw } from 'lucide-react';
 
+import menuScene from '../assets/scenes/menu.jpg';
+import aboutScene from '../assets/scenes/about.jpg';
+import skillsScene from '../assets/scenes/skills.jpg';
+import achievementsScene from '../assets/scenes/achievements.jpg';
+import academyScene from '../assets/scenes/academy.jpg';
+import contactScene from '../assets/scenes/contact.jpg';
+import exitScene from '../assets/scenes/exit.jpg';
+
 export function SceneViewport({ activeScene = 'menu', children }) {
   // Mobile orientation detection
   const [isPortrait, setIsPortrait] = useState(false);
@@ -63,49 +71,49 @@ export function SceneViewport({ activeScene = 'menu', children }) {
   // Map active screen to scene image and atmospheric FX
   const scenes = {
     menu: {
-      image: '/src/assets/scenes/menu.jpg',
+      image: menuScene || '/assets/scenes/menu.jpg',
       mode: 'sunset',
       hasBirds: true,
       hasAircraft: true,
       location: 'VICE BEACH'
     },
     about: {
-      image: '/src/assets/scenes/about.jpg',
+      image: aboutScene || '/assets/scenes/about.jpg',
       mode: 'sunset',
       hasBirds: true,
       hasAircraft: false,
       location: 'OCEAN DRIVE'
     },
     skills: {
-      image: '/src/assets/scenes/skills.jpg',
+      image: skillsScene || '/assets/scenes/skills.jpg',
       mode: 'steam',
       hasBirds: false,
       hasAircraft: false,
       location: 'PORT KELBRAY'
     },
     achievements: {
-      image: '/src/assets/scenes/achievements.jpg',
+      image: achievementsScene || '/assets/scenes/achievements.jpg',
       mode: 'neon',
       hasBirds: false,
       hasAircraft: false,
       location: 'NEON STRIP'
     },
     academy: {
-      image: '/src/assets/scenes/academy.jpg',
+      image: academyScene || '/assets/scenes/academy.jpg',
       mode: 'sunset',
       hasBirds: true,
       hasAircraft: false,
       location: 'KELBRAY HEIGHTS'
     },
     contact: {
-      image: '/src/assets/scenes/contact.jpg',
+      image: contactScene || '/assets/scenes/contact.jpg',
       mode: 'neon',
       hasBirds: false,
       hasAircraft: false,
       location: 'WATERFRONT LOUNGE'
     },
     exit: {
-      image: '/src/assets/scenes/exit.jpg',
+      image: exitScene || '/assets/scenes/exit.jpg',
       mode: 'sunset',
       hasBirds: true,
       hasAircraft: true,

@@ -690,33 +690,6 @@ export default function App() {
           }
         }}
       />
-      {/* Interactive GTA Soundtrack Start Banner - disappears automatically the instant sound plays */}
-      <AnimatePresence>
-        {!isPlaying && (
-          <motion.div
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 10, scale: 0.95 }}
-            transition={{ duration: 0.3 }}
-            onClick={() => {
-              if (audioRef.current) {
-                audioRef.current.volume = 0.85;
-                audioRef.current.play().then(() => {
-                  setIsPlaying(true);
-                  setIsMuted(false);
-                }).catch(() => {});
-              }
-            }}
-            className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 cursor-pointer pointer-events-auto bg-black/85 hover:bg-black/95 border-2 border-[#ff2a85] hover:border-cyan-400 px-5 py-2.5 rounded shadow-[0_0_25px_rgba(255,42,133,0.7)] backdrop-blur-md flex items-center gap-3 transition-all group select-none"
-          >
-            <div className="w-2.5 h-2.5 rounded-full bg-[#ff2a85] group-hover:bg-cyan-400 animate-ping" />
-            <span className="font-mono text-[11px] md:text-xs font-black tracking-widest text-white uppercase group-hover:text-cyan-300">
-              ▶ CLICK TO START GTA SOUNDTRACK • FLASH FM
-            </span>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
       {/* Background GTA Soundtrack Audio */}
       <audio
         ref={audioRef}

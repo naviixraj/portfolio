@@ -82,7 +82,7 @@ export function GameHUD({ cash = 1250000, stars = 3, isMuted, isPlaying = false,
           ) : (
             <>
               <VolumeX size={11} className="text-pink-400" />
-              <span>{isMuted ? 'UNMUTE' : 'START BGM'}</span>
+              <span>{isMuted ? 'MUTE' : 'AUDIO'}</span>
             </>
           )}
         </button>
